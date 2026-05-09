@@ -6,21 +6,39 @@
 
   <div class="header-bg"></div>
 
-  <img src="assets/images/hmpgkape.png" class="hmpg">
   <img src="assets/images/logo3.png" class="logo">
 
-  <div class="content">
-    <h1>More Than Just Coffee..</h1>
-    <p>It's the laughter shared over lattes, the quiet pauses between meetings, the comfort you find in every cup. Here, coffee isn't just a drink — it's part of your story.</p>
-    <a href="#" (click)="scrollTo($event, 'menu')" class="order-btn">Order Now</a>
-
-    <nav>
+  <!-- Desktop Nav -->
+  <nav class="desktop-nav">
     <a href="#" (click)="scrollTo($event, 'home')">Home</a>
     <a href="#" (click)="scrollTo($event, 'menu')">Menu</a>
     <a href="#" (click)="scrollTo($event, 'about')">About</a>
     <a href="#" (click)="scrollTo($event, 'contact')">Contact</a>
     <a href="#" (click)="openModal($event)">Log in</a>
   </nav>
+
+  <!-- Hamburger Button (mobile only) -->
+  <button class="hamburger" (click)="toggleMenu()" [class.open]="isMenuOpen">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <!-- Mobile Nav Overlay -->
+  <div class="mobile-nav" [class.open]="isMenuOpen">
+    <a href="#" (click)="scrollTo($event, 'home'); toggleMenu()">Home</a>
+    <a href="#" (click)="scrollTo($event, 'menu'); toggleMenu()">Menu</a>
+    <a href="#" (click)="scrollTo($event, 'about'); toggleMenu()">About</a>
+    <a href="#" (click)="scrollTo($event, 'contact'); toggleMenu()">Contact</a>
+    <a href="#" (click)="openModal($event); toggleMenu()">Log in</a>
+  </div>
+
+  <img src="assets/images/hmpgkape.png" class="hmpg">
+
+  <div class="content">
+    <h1>More Than Just Coffee..</h1>
+    <p>It's the laughter shared over lattes, the quiet pauses between meetings, the comfort you find in every cup. Here, coffee isn't just a drink — it's part of your story.</p>
+    <a href="#" (click)="scrollTo($event, 'menu')" class="order-btn">Order Now</a>
   </div>
 
   <div class="socmed">
