@@ -1,0 +1,247 @@
+<!-- HOME SECTION -->
+<section id="home">
+  <video autoplay muted loop playsinline id="bg-video">
+    <source src="assets/videos/homepagebg.mp4" type="video/mp4">
+  </video>
+
+  <div class="header-bg"></div>
+
+  <img src="assets/images/hmpgkape.png" class="hmpg">
+  <img src="assets/images/logo3.png" class="logo">
+
+  <div class="content">
+    <h1>More Than Just Coffee..</h1>
+    <p>It's the laughter shared over lattes, the quiet pauses between meetings, the comfort you find in every cup. Here, coffee isn't just a drink — it's part of your story.</p>
+    <a href="#" (click)="scrollTo($event, 'menu')" class="order-btn">Order Now</a>
+
+    <nav>
+    <a href="#" (click)="scrollTo($event, 'home')">Home</a>
+    <a href="#" (click)="scrollTo($event, 'menu')">Menu</a>
+    <a href="#" (click)="scrollTo($event, 'about')">About</a>
+    <a href="#" (click)="scrollTo($event, 'contact')">Contact</a>
+    <a href="#" (click)="openModal($event)">Log in</a>
+  </nav>
+  </div>
+
+  <div class="socmed">
+    <i class="fa-brands fa-facebook"></i>
+    <i class="fa-brands fa-instagram"></i>
+    <i class="fa-brands fa-tiktok"></i>
+  </div>
+</section>
+
+<!-- MENU SECTION -->
+<section id="menu">
+  <h2>Our Menu</h2>
+
+  <div class="menu-container">
+    <div class="menu item">
+      <img src="assets/images/Espreso.png" alt="Espresso">
+      <h3>Espresso</h3>
+      <p>Rich and bold espresso shot</p>
+      <span class="price">₱130</span>
+      <button class="order-menu-btn">Order Now</button>
+    </div>
+
+    <div class="menu item">
+      <img src="assets/images/Americano.png" alt="Americano">
+      <h3>Americano</h3>
+      <p>Smooth and bold Americano brew</p>
+      <span class="price">₱150</span>
+      <button class="order-menu-btn">Order Now</button>
+    </div>
+
+    <div class="menu item">
+      <img src="assets/images/Latte.png" alt="Latte">
+      <h3>Latte</h3>
+      <p>Creamy and smooth latte blend</p>
+      <span class="price">₱160</span>
+      <button class="order-menu-btn">Order Now</button>
+    </div>
+
+    <div class="menu item">
+      <img src="assets/images/Capuccino.png" alt="Capuccino">
+      <h3>Capuccino</h3>
+      <p>Bold and frothy cappuccino</p>
+      <span class="price">₱200</span>
+      <button class="order-menu-btn">Order Now</button>
+    </div>
+
+    <div class="menu item">
+      <img src="assets/images/Mocha.png" alt="Mocha">
+      <h3>Mocha</h3>
+      <p>Smooth and sweet mocha cup</p>
+      <span class="price">₱220</span>
+      <button class="order-menu-btn">Order Now</button>
+    </div>
+
+    <div class="menu item">
+      <img src="assets/images/Affogato.png" alt="Affogato">
+      <h3>Affogato</h3>
+      <p>Creamy affogato dessert cup</p>
+      <span class="price">₱210</span>
+      <button class="order-menu-btn">Order Now</button>
+    </div>
+
+    <div class="menu item">
+      <img src="assets/images/Mocha frio.png" alt="Mocha frio">
+      <h3>Mocha frio</h3>
+      <p>Cold and creamy mocha frío blend</p>
+      <span class="price">₱200</span>
+      <button class="order-menu-btn">Order Now</button>
+    </div>
+
+    <div class="menu item">
+      <img src="assets/images/Ice Coffee.png" alt="Ice Coffee">
+      <h3>Ice Coffee</h3>
+      <p>Cold and bold iced coffee</p>
+      <span class="price">₱190</span>
+      <button class="order-menu-btn">Order Now</button>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT SECTION -->
+<section id="about">
+  <h2>About Us</h2>
+
+  <div class="about-content">
+    <p>Remo's Coffee Shop is a student-made website designed to showcase a modern café concept that blends comfort, creativity, and great coffee. Our mission is to offer high-quality beverages and a relaxing space where customers can unwind, study, or connect with friends.</p>
+    <p>This project was developed by four IT students from USTP Villanueva as part of our Human Computer Interaction (HCI) course. Together, we combined our skills in design, coding, and creativity to bring this café concept to life.</p>
+  </div>
+
+  <h3 class="creators-title">Meet the Creators</h3>
+
+  <div class="creators-container">
+    <div class="creator-card">
+      <img src="assets/images/Juliver.png" alt="Creator 1">
+      <h4>Juliver Llander</h4>
+      <p>Coder/Designer</p>
+    </div>
+
+    <div class="creator-card">
+      <img src="assets/images/Chesca.jpg" alt="Creator 2">
+      <h4>Chesca Paderna</h4>
+      <p>Researcher/Designer</p>
+    </div>
+
+    <div class="creator-card">
+      <img src="assets/images/Claire.png" alt="Creator 3">
+      <h4>Claire Tremocha</h4>
+      <p>Researcher/Designer</p>
+    </div>
+
+    <div class="creator-card">
+      <img src="assets/images/Dablo.png" alt="Creator 4">
+      <h4>Jun Preyl Dablo</h4>
+      <p>Designer</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT SECTION -->
+<section id="contact">
+  <h2>Get in Touch</h2>
+
+  <div class="contact-container">
+    <div class="contact-info">
+      <div class="contact-item">
+        <i class="fa-solid fa-location-dot"></i>
+        <div class="contact-text">
+          <h4>Location</h4>
+          <p>Pabayo st., Cagayan De Oro City</p>
+        </div>
+      </div>
+
+      <div class="contact-item">
+        <i class="fa-solid fa-phone"></i>
+        <div class="contact-text">
+          <h4>Phone</h4>
+          <p>(0912) 345-6789</p>
+        </div>
+      </div>
+
+      <div class="contact-item">
+        <i class="fa-solid fa-envelope"></i>
+        <div class="contact-text">
+          <h4>Email</h4>
+          <p>remoscoffee@gmail.com</p>
+        </div>
+      </div>
+
+      <div class="contact-item">
+        <i class="fa-solid fa-clock"></i>
+        <div class="contact-text">
+          <h4>Opening Hours</h4>
+          <p>Monday–Sunday<br>7:00 AM – 8:00 PM</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-form">
+      <h3>Send Us a Message</h3>
+      <form (ngSubmit)="onContactSubmit()">
+        <input type="text" placeholder="Your Name" required>
+        <input type="email" placeholder="Your Email" required>
+        <input type="text" placeholder="Subject">
+        <textarea placeholder="Your Message" rows="6" required></textarea>
+        <button type="submit" class="submit-btn">Send Message</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="social-links">
+    <h3>Follow Us</h3>
+    <div class="social-icons-contact">
+      <a href="#"><i class="fa-brands fa-facebook"></i></a>
+      <a href="#"><i class="fa-brands fa-instagram"></i></a>
+      <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+    </div>
+  </div>
+</section>
+
+<!-- LOGIN MODAL -->
+<div id="loginModal" class="modal"
+     [style.display]="isModalOpen ? 'block' : 'none'"
+     (click)="onOverlayClick($event)">
+  <div class="modal-content">
+    <span class="close-btn" (click)="closeModal()">&times;</span>
+    <h2>Welcome Back!</h2>
+    <p class="modal-subtitle">Sign in to your account</p>
+
+    <form class="login-form" (ngSubmit)="onLoginSubmit()">
+      <div class="input-group">
+        <i class="fa-solid fa-user"></i>
+        <input type="text" placeholder="Username or Email" required>
+      </div>
+
+      <div class="input-group">
+        <i class="fa-solid fa-lock"></i>
+        <input type="password" placeholder="Password" required>
+      </div>
+
+      <div class="form-options">
+        <label class="remember-me">
+          <input type="checkbox">
+          <span>Remember me</span>
+        </label>
+        <a href="#" class="forgot-password">Forgot Password?</a>
+      </div>
+
+      <button type="submit" class="login-btn">Log In</button>
+
+      <div class="divider"><span>OR</span></div>
+
+      <div class="social-login">
+        <button type="button" class="social-btn facebook-btn">
+          <i class="fa-brands fa-facebook"></i> Continue with Facebook
+        </button>
+        <button type="button" class="social-btn google-btn">
+          <i class="fa-brands fa-google"></i> Continue with Google
+        </button>
+      </div>
+
+      <p class="signup-text">Don't have an account? <a href="#" class="signup-link">Sign Up</a></p>
+    </form>
+  </div>
+</div>
