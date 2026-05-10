@@ -1,39 +1,45 @@
-<!-- HOME SECTION -->
+<!-- TOAST -->
+<div class="toast" [class.show]="toastVisible">{{ toastMessage }}</div>
+
+<!-- ===================== HOME ===================== -->
 <section id="home">
   <video autoplay muted loop playsinline id="bg-video">
     <source src="assets/videos/homepagebg.mp4" type="video/mp4">
   </video>
 
   <div class="header-bg"></div>
+  <img src="assets/images/logo3.png" class="logo" alt="Remo's Coffee Logo">
 
-  <img src="assets/images/logo3.png" class="logo">
-
-  <!-- Desktop Nav -->
   <nav class="desktop-nav">
-    <a href="#" (click)="scrollTo($event, 'home')">Home</a>
-    <a href="#" (click)="scrollTo($event, 'menu')">Menu</a>
-    <a href="#" (click)="scrollTo($event, 'about')">About</a>
-    <a href="#" (click)="scrollTo($event, 'contact')">Contact</a>
-    <a href="#" (click)="openModal($event)">Log in</a>
+    <a href="#" (click)="scrollTo($event, 'home')"    [class.nav-active]="activeSection === 'home'">Home</a>
+    <a href="#" (click)="scrollTo($event, 'menu')"    [class.nav-active]="activeSection === 'menu'">Menu</a>
+    <a href="#" (click)="scrollTo($event, 'about')"   [class.nav-active]="activeSection === 'about'">About</a>
+    <a href="#" (click)="scrollTo($event, 'contact')" [class.nav-active]="activeSection === 'contact'">Contact</a>
+    <a href="#" *ngIf="!isLoggedIn()" (click)="openModal($event)">Log in</a>
+    <a href="#" *ngIf="isLoggedIn()"  (click)="onLogout()">
+      {{ displayName() }} &nbsp;<i class="fa-solid fa-right-from-bracket"></i>
+    </a>
   </nav>
 
-  <!-- Hamburger Button (mobile only) -->
-  <button class="hamburger" (click)="toggleMenu()" [class.open]="isMenuOpen">
-    <span></span>
-    <span></span>
-    <span></span>
-  </button>
-
-  <!-- Mobile Nav Overlay -->
-  <div class="mobile-nav" [class.open]="isMenuOpen">
-    <a href="#" (click)="scrollTo($event, 'home'); toggleMenu()">Home</a>
-    <a href="#" (click)="scrollTo($event, 'menu'); toggleMenu()">Menu</a>
-    <a href="#" (click)="scrollTo($event, 'about'); toggleMenu()">About</a>
-    <a href="#" (click)="scrollTo($event, 'contact'); toggleMenu()">Contact</a>
-    <a href="#" (click)="openModal($event); toggleMenu()">Log in</a>
+  <div class="cart-icon" (click)="toggleCart()" aria-label="Open cart">
+    <i class="fa-solid fa-bag-shopping"></i>
+    <span class="cart-badge" *ngIf="cartCount() > 0">{{ cartCount() }}</span>
   </div>
 
-  <img src="assets/images/hmpgkape.png" class="hmpg">
+  <button class="hamburger" (click)="toggleMenu()" [class.open]="isMenuOpen" aria-label="Toggle nav">
+    <span></span><span></span><span></span>
+  </button>
+
+  <div class="mobile-nav" [class.open]="isMenuOpen">
+    <a href="#" (click)="scrollTo($event, 'home')"    [class.nav-active]="activeSection === 'home'">Home</a>
+    <a href="#" (click)="scrollTo($event, 'menu')"    [class.nav-active]="activeSection === 'menu'">Menu</a>
+    <a href="#" (click)="scrollTo($event, 'about')"   [class.nav-active]="activeSection === 'about'">About</a>
+    <a href="#" (click)="scrollTo($event, 'contact')" [class.nav-active]="activeSection === 'contact'">Contact</a>
+    <a href="#" *ngIf="!isLoggedIn()" (click)="openModal($event); toggleMenu()">Log in</a>
+    <a href="#" *ngIf="isLoggedIn()"  (click)="onLogout(); toggleMenu()">Logout</a>
+  </div>
+
+  <img src="assets/images/hmpgkape.png" class="hmpg" alt="Coffee cup">
 
   <div class="content">
     <h1>More Than Just Coffee..</h1>
@@ -48,78 +54,53 @@
   </div>
 </section>
 
-<!-- MENU SECTION -->
+
+<!-- ===================== MENU ===================== -->
 <section id="menu">
   <h2>Our Menu</h2>
 
+  <!-- Category Filter Tabs -->
+<div class="menu-filters">
+  <button class="filter-btn" [class.active]="activeFilter === 'all'" (click)="setFilter('all')">
+    <i class="fa-solid fa-border-all"></i> All
+  </button>
+  <button class="filter-btn hot-btn" [class.active]="activeFilter === 'hot'" (click)="setFilter('hot')">
+    <i class="fa-solid fa-fire"></i> Hot
+  </button>
+  <button class="filter-btn cold-btn" [class.active]="activeFilter === 'cold'" (click)="setFilter('cold')">
+    <i class="fa-solid fa-snowflake"></i> Cold
+  </button>
+</div>
+
   <div class="menu-container">
-    <div class="menu item">
-      <img src="assets/images/Espreso.png" alt="Espresso">
-      <h3>Espresso</h3>
-      <p>Rich and bold espresso shot</p>
-      <span class="price">₱130</span>
-      <button class="order-menu-btn">Order Now</button>
-    </div>
+     <div class="menu-empty" *ngIf="menuItems.length === 0">
+    <i class="fa-solid fa-mug-hot"></i>
+    <p>No items found in this category.</p>
+  </div>
+    <div class="menu item" *ngFor="let item of menuItems">
+      <img [src]="item.image" [alt]="item.name">
+      <h3>{{ item.name }}</h3>
+      <p>{{ item.description }}</p>
+      <span class="price">₱{{ item.price }}</span>
 
-    <div class="menu item">
-      <img src="assets/images/Americano.png" alt="Americano">
-      <h3>Americano</h3>
-      <p>Smooth and bold Americano brew</p>
-      <span class="price">₱150</span>
-      <button class="order-menu-btn">Order Now</button>
-    </div>
 
-    <div class="menu item">
-      <img src="assets/images/Latte.png" alt="Latte">
-      <h3>Latte</h3>
-      <p>Creamy and smooth latte blend</p>
-      <span class="price">₱160</span>
-      <button class="order-menu-btn">Order Now</button>
-    </div>
 
-    <div class="menu item">
-      <img src="assets/images/Capuccino.png" alt="Capuccino">
-      <h3>Capuccino</h3>
-      <p>Bold and frothy cappuccino</p>
-      <span class="price">₱200</span>
-      <button class="order-menu-btn">Order Now</button>
-    </div>
+      <!-- Quantity selector on card -->
+      <div class="card-qty-controls">
+        <button (click)="decreaseCardQty(item.id)" aria-label="Decrease">−</button>
+        <span>{{ getCardQty(item.id) }}</span>
+        <button (click)="increaseCardQty(item.id)" aria-label="Increase">+</button>
+      </div>
 
-    <div class="menu item">
-      <img src="assets/images/Mocha.png" alt="Mocha">
-      <h3>Mocha</h3>
-      <p>Smooth and sweet mocha cup</p>
-      <span class="price">₱220</span>
-      <button class="order-menu-btn">Order Now</button>
-    </div>
-
-    <div class="menu item">
-      <img src="assets/images/Affogato.png" alt="Affogato">
-      <h3>Affogato</h3>
-      <p>Creamy affogato dessert cup</p>
-      <span class="price">₱210</span>
-      <button class="order-menu-btn">Order Now</button>
-    </div>
-
-    <div class="menu item">
-      <img src="assets/images/Mocha frio.png" alt="Mocha frio">
-      <h3>Mocha frio</h3>
-      <p>Cold and creamy mocha frío blend</p>
-      <span class="price">₱200</span>
-      <button class="order-menu-btn">Order Now</button>
-    </div>
-
-    <div class="menu item">
-      <img src="assets/images/Ice Coffee.png" alt="Ice Coffee">
-      <h3>Ice Coffee</h3>
-      <p>Cold and bold iced coffee</p>
-      <span class="price">₱190</span>
-      <button class="order-menu-btn">Order Now</button>
+      <button class="order-menu-btn" (click)="addToCart(item)">
+        <i class="fa-solid fa-bag-shopping"></i> Add to Cart
+      </button>
     </div>
   </div>
 </section>
 
-<!-- ABOUT SECTION -->
+
+<!-- ===================== ABOUT ===================== -->
 <section id="about">
   <h2>About Us</h2>
 
@@ -132,32 +113,30 @@
 
   <div class="creators-container">
     <div class="creator-card">
-      <img src="assets/images/Juliver.png" alt="Creator 1">
+      <img src="assets/images/Juliver.png" alt="Juliver Llander">
       <h4>Juliver Llander</h4>
-      <p>Coder/Designer</p>
+      <p>Coder / Designer</p>
     </div>
-
     <div class="creator-card">
-      <img src="assets/images/Chesca.jpg" alt="Creator 2">
+      <img src="assets/images/Chesca.jpg" alt="Chesca Paderna">
       <h4>Chesca Paderna</h4>
-      <p>Researcher/Designer</p>
+      <p>Researcher / Designer</p>
     </div>
-
     <div class="creator-card">
-      <img src="assets/images/Claire.png" alt="Creator 3">
+      <img src="assets/images/Claire.png" alt="Claire Tremocha">
       <h4>Claire Tremocha</h4>
-      <p>Researcher/Designer</p>
+      <p>Researcher / Designer</p>
     </div>
-
     <div class="creator-card">
-      <img src="assets/images/Dablo.png" alt="Creator 4">
-      <h4>Jun Preyl Dablo</h4>
+      <img src="assets/images/Jel.jpg" alt="Jellian Ranises">
+      <h4>Jellian Ranises</h4>
       <p>Designer</p>
     </div>
   </div>
 </section>
 
-<!-- CONTACT SECTION -->
+
+<!-- ===================== CONTACT ===================== -->
 <section id="contact">
   <h2>Get in Touch</h2>
 
@@ -167,10 +146,9 @@
         <i class="fa-solid fa-location-dot"></i>
         <div class="contact-text">
           <h4>Location</h4>
-          <p>Pabayo st., Cagayan De Oro City</p>
+          <p>Pabayo St., Cagayan de Oro City</p>
         </div>
       </div>
-
       <div class="contact-item">
         <i class="fa-solid fa-phone"></i>
         <div class="contact-text">
@@ -178,32 +156,50 @@
           <p>(0912) 345-6789</p>
         </div>
       </div>
-
       <div class="contact-item">
         <i class="fa-solid fa-envelope"></i>
         <div class="contact-text">
           <h4>Email</h4>
-          <p>remoscoffee@gmail.com</p>
+          <p>remoscoffee&#64;gmail.com</p>
         </div>
       </div>
-
       <div class="contact-item">
         <i class="fa-solid fa-clock"></i>
         <div class="contact-text">
           <h4>Opening Hours</h4>
-          <p>Monday–Sunday<br>7:00 AM – 8:00 PM</p>
+          <p>Monday – Sunday<br>7:00 AM – 8:00 PM</p>
         </div>
       </div>
     </div>
 
     <div class="contact-form">
       <h3>Send Us a Message</h3>
-      <form (ngSubmit)="onContactSubmit()">
-        <input type="text" placeholder="Your Name" required>
-        <input type="email" placeholder="Your Email" required>
-        <input type="text" placeholder="Subject">
-        <textarea placeholder="Your Message" rows="6" required></textarea>
-        <button type="submit" class="submit-btn">Send Message</button>
+      <form (ngSubmit)="onContactSubmit(contactForm)" #contactForm="ngForm" autocomplete="off">
+
+        <input type="text" placeholder="Your Name"
+          [(ngModel)]="contactName" name="contactName" required
+          #nameField="ngModel"
+          [class.input-error]="nameField.invalid && nameField.touched">
+        <span class="field-error" *ngIf="nameField.invalid && nameField.touched">Name is required</span>
+
+        <input type="email" placeholder="Your Email"
+          [(ngModel)]="contactEmail" name="contactEmail" required
+          #emailField="ngModel"
+          [class.input-error]="emailField.invalid && emailField.touched">
+        <span class="field-error" *ngIf="emailField.invalid && emailField.touched">Valid email is required</span>
+
+        <input type="text" placeholder="Subject"
+          [(ngModel)]="contactSubject" name="contactSubject">
+
+        <textarea placeholder="Your Message" rows="6"
+          [(ngModel)]="contactMessage" name="contactMessage" required
+          #messageField="ngModel"
+          [class.input-error]="messageField.invalid && messageField.touched"></textarea>
+        <span class="field-error" *ngIf="messageField.invalid && messageField.touched">Message is required</span>
+
+        <button type="submit" class="submit-btn" [disabled]="contactForm.invalid">
+          Send Message
+        </button>
       </form>
     </div>
   </div>
@@ -211,14 +207,113 @@
   <div class="social-links">
     <h3>Follow Us</h3>
     <div class="social-icons-contact">
-      <a href="#"><i class="fa-brands fa-facebook"></i></a>
-      <a href="#"><i class="fa-brands fa-instagram"></i></a>
-      <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+      <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+      <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+      <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
     </div>
   </div>
 </section>
 
-<!-- LOGIN MODAL -->
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="site-footer">
+  <div class="footer-container">
+
+    <div class="footer-brand">
+      <img src="assets/images/logo3.png" alt="Remo's Coffee Logo">
+      <p>More than just coffee — it's part of your story.</p>
+    </div>
+
+    <div class="footer-links">
+      <h4>Quick Links</h4>
+      <a href="#" (click)="scrollTo($event, 'home')">Home</a>
+      <a href="#" (click)="scrollTo($event, 'menu')">Menu</a>
+      <a href="#" (click)="scrollTo($event, 'about')">About</a>
+      <a href="#" (click)="scrollTo($event, 'contact')">Contact</a>
+    </div>
+
+    <div class="footer-contact">
+      <h4>Find Us</h4>
+      <p><i class="fa-solid fa-location-dot"></i> Pabayo St., Cagayan de Oro City</p>
+      <p><i class="fa-solid fa-phone"></i> (0912) 345-6789</p>
+      <p><i class="fa-solid fa-envelope"></i> remoscoffee&#64;gmail.com</p>
+      <p><i class="fa-solid fa-clock"></i> Mon–Sun, 7:00 AM – 8:00 PM</p>
+    </div>
+
+    <div class="footer-social">
+      <h4>Follow Us</h4>
+      <div class="footer-social-icons">
+        <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+        <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+      </div>
+    </div>
+
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Remo's Coffee Shop. All rights reserved. Made with ☕ by USTP Villanueva IT Students.</p>
+  </div>
+</footer>
+
+
+<!-- ===================== CART DRAWER ===================== -->
+<div class="cart-overlay" [class.open]="isCartOpen" (click)="closeCart()"></div>
+
+<div class="cart-drawer" [class.open]="isCartOpen">
+  <div class="cart-header">
+    <h3><i class="fa-solid fa-bag-shopping"></i> Your Order</h3>
+    <span class="cart-close" (click)="closeCart()">&times;</span>
+  </div>
+
+  <div class="cart-success" *ngIf="orderSuccess">
+    <div class="success-icon">
+      <i class="fa-solid fa-circle-check"></i>
+    </div>
+    <h3>Order Placed!</h3>
+    <p>Your coffee is being prepared.<br>Sit tight, it'll be ready soon!</p>
+    <small>This will close automatically...</small>
+  </div>
+
+  <div class="cart-body" *ngIf="!orderSuccess">
+    <div class="cart-empty" *ngIf="isCartEmpty()">
+      <i class="fa-solid fa-mug-hot"></i>
+      <p>Your cart is empty</p>
+      <small>Add something delicious from our menu!</small>
+    </div>
+
+    <div class="cart-item" *ngFor="let item of cartItems()">
+      <img [src]="item.image" [alt]="item.name">
+      <div class="cart-item-info">
+        <h4>{{ item.name }}</h4>
+        <span class="cart-item-price">₱{{ item.price }}</span>
+      </div>
+      <div class="cart-item-controls">
+        <button (click)="decreaseQty(item.id)" aria-label="Decrease">−</button>
+        <span>{{ item.quantity }}</span>
+        <button (click)="increaseQty(item.id)" aria-label="Increase">+</button>
+      </div>
+      <span class="cart-item-subtotal">₱{{ item.price * item.quantity }}</span>
+      <button class="cart-item-remove" (click)="removeItem(item.id)" aria-label="Remove">
+        <i class="fa-solid fa-trash-can"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="cart-footer" *ngIf="!isCartEmpty() && !orderSuccess">
+    <div class="cart-total">
+      <span>Total</span>
+      <strong>₱{{ cartTotal() }}</strong>
+    </div>
+    <button class="checkout-btn" (click)="checkout()" [disabled]="isOrdering">
+      <span *ngIf="!isOrdering"><i class="fa-solid fa-receipt"></i> Place Order</span>
+      <span *ngIf="isOrdering"><i class="fa-solid fa-spinner fa-spin"></i> Placing Order...</span>
+    </button>
+    <button class="clear-btn" (click)="clearCart()" [disabled]="isOrdering">Clear Cart</button>
+  </div>
+</div>
+
+
+<!-- ===================== LOGIN MODAL ===================== -->
 <div id="loginModal" class="modal"
      [style.display]="isModalOpen ? 'block' : 'none'"
      (click)="onOverlayClick($event)">
@@ -227,21 +322,20 @@
     <h2>Welcome Back!</h2>
     <p class="modal-subtitle">Sign in to your account</p>
 
-    <form class="login-form" (ngSubmit)="onLoginSubmit()">
+    <form class="login-form" #loginForm="ngForm"
+          (ngSubmit)="onLoginSubmit(emailInput.value, passwordInput.value)">
       <div class="input-group">
         <i class="fa-solid fa-user"></i>
-        <input type="text" placeholder="Username or Email" required>
+        <input #emailInput type="email" placeholder="Email" required>
       </div>
-
       <div class="input-group">
         <i class="fa-solid fa-lock"></i>
-        <input type="password" placeholder="Password" required>
+        <input #passwordInput type="password" placeholder="Password" required>
       </div>
 
       <div class="form-options">
         <label class="remember-me">
-          <input type="checkbox">
-          <span>Remember me</span>
+          <input type="checkbox"><span>Remember me</span>
         </label>
         <a href="#" class="forgot-password">Forgot Password?</a>
       </div>
@@ -259,7 +353,47 @@
         </button>
       </div>
 
-      <p class="signup-text">Don't have an account? <a href="#" class="signup-link">Sign Up</a></p>
+      <p class="signup-text">
+  Don't have an account? <a href="#" class="signup-link" (click)="openSignUp($event)">Sign Up</a>
+</p>
+
+    </form>
+  </div>
+</div>
+
+<!-- ===================== SIGN UP MODAL ===================== -->
+<div id="signupModal" class="modal"
+     [style.display]="isSignUpOpen ? 'block' : 'none'"
+     (click)="onSignUpOverlayClick($event)">
+  <div class="modal-content">
+    <span class="close-btn" (click)="closeSignUp()">&times;</span>
+    <h2>Create Account</h2>
+    <p class="modal-subtitle">Join Remo's Coffee!</p>
+
+    <form class="login-form" #signupForm="ngForm"
+          (ngSubmit)="onSignUpSubmit(signupNameInput.value, signupEmailInput.value, signupPasswordInput.value)">
+
+      <div class="input-group">
+        <i class="fa-solid fa-user"></i>
+        <input #signupNameInput type="text" placeholder="Full Name" required>
+      </div>
+
+      <div class="input-group">
+        <i class="fa-solid fa-envelope"></i>
+        <input #signupEmailInput type="email" placeholder="Email" required>
+      </div>
+
+      <div class="input-group">
+        <i class="fa-solid fa-lock"></i>
+        <input #signupPasswordInput type="password" placeholder="Password" required>
+      </div>
+
+      <button type="submit" class="login-btn">Sign Up</button>
+
+      <p class="signup-text">
+        Already have an account? <a href="#" class="signup-link" (click)="openModal($event)">Log In</a>
+      </p>
+
     </form>
   </div>
 </div>
