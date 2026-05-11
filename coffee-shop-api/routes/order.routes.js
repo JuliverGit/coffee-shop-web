@@ -15,19 +15,16 @@ router.post('/', authMiddleware, async (req, res) => {
   const connection = await db.getConnection();
 
   try {
-    // ── BEGIN TRANSACTION (ACID!) ──
     await connection.beginTransaction();
 
-    // 1. Insert order
+    // ✅ may payment_method na
     const [orderResult] = await connection.query(
-      'INSERT INTO orders (user_id, total_amount, status) VALUES (?, ?, ?)',
-      [userId, totalAmount, 'pending']
+      'INSERT INTO orders (user_id, total_amount, status, payment_method) VALUES (?, ?, ?, ?)',
+      [userId, totalAmount, 'pending', 'cash']
     );
     const orderId = orderResult.insertId;
 
-    // 2. Insert order items + update stock
     for (const item of items) {
-      // Check stock
       const [stockRows] = await connection.query(
         'SELECT stock FROM menu_items WHERE id = ?',
         [item.menuItemId]
@@ -38,20 +35,17 @@ router.post('/', authMiddleware, async (req, res) => {
         return res.status(400).json({ message: `Insufficient stock for item ID ${item.menuItemId}.` });
       }
 
-      // Insert order item
       await connection.query(
         'INSERT INTO order_items (order_id, menu_item_id, quantity, price) VALUES (?, ?, ?, ?)',
         [orderId, item.menuItemId, item.quantity, item.price]
       );
 
-      // Deduct stock
       await connection.query(
         'UPDATE menu_items SET stock = stock - ? WHERE id = ?',
         [item.quantity, item.menuItemId]
       );
     }
 
-    // ── COMMIT (ACID!) ──
     await connection.commit();
 
     res.status(201).json({
@@ -61,7 +55,6 @@ router.post('/', authMiddleware, async (req, res) => {
     });
 
   } catch (err) {
-    // ── ROLLBACK (ACID!) ──
     await connection.rollback();
     console.error(err);
     res.status(500).json({ message: 'Order failed. Please try again.' });
@@ -73,24 +66,26 @@ router.post('/', authMiddleware, async (req, res) => {
 // ── GET USER ORDERS ──
 router.get('/', authMiddleware, async (req, res) => {
   try {
-    const [rows] = await db.query(
-      `SELECT o.id, o.total_amount, o.status, o.created_at,
-        JSON_ARRAYAGG(
-          JSON_OBJECT(
-            'name', m.name,
-            'quantity', oi.quantity,
-            'price', oi.price
-          )
-        ) as items
-      FROM orders o
-      JOIN order_items oi ON o.id = oi.order_id
-      JOIN menu_items m ON oi.menu_item_id = m.id
-      WHERE o.user_id = ?
-      GROUP BY o.id
-      ORDER BY o.created_at DESC`,
+    const [orders] = await db.query(
+      `SELECT id, total_amount, status, created_at
+       FROM orders
+       WHERE user_id = ?
+       ORDER BY created_at DESC`,
       [req.user.id]
     );
-    res.json(rows);
+
+    for (const order of orders) {
+      const [items] = await db.query(
+        `SELECT oi.quantity, oi.price, m.name
+         FROM order_items oi
+         JOIN menu_items m ON oi.menu_item_id = m.id
+         WHERE oi.order_id = ?`,
+        [order.id]
+      );
+      order.items = items;
+    }
+
+    res.json(orders);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server error.' });

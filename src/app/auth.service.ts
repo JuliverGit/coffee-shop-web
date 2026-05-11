@@ -36,7 +36,6 @@ export class AuthService {
   private apiUrl = 'http://localhost:3000/api/auth';
   private TOKEN_KEY = 'remos_auth_token';
 
-  // ── Reactive auth state ──
   private _user = signal<User | null>(null);
 
   readonly currentUser  = this._user.asReadonly();
@@ -71,20 +70,30 @@ export class AuthService {
     this._user.set(null);
   }
 
-  // ── Restore session ──
+  // ── Restore session from token directly (no API call) ──
   restoreSession() {
     const token = localStorage.getItem(this.TOKEN_KEY);
     if (!token) return;
-    this.http.get<User>(`${this.apiUrl}/me`, {
-      headers: { Authorization: `Bearer ${token}` }
-    }).subscribe({
-      next: user => this._user.set(user),
-      error: ()  => this.logout()
-    });
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      this._user.set({
+        id: payload.id,
+        name: payload.name,
+        email: payload.email,
+        role: payload.role
+      });
+    } catch {
+      this.logout();
+    }
   }
 
   // ── Get token ──
   getToken(): string | null {
     return localStorage.getItem(this.TOKEN_KEY);
   }
+
+sendMessage(payload: { name: string; email: string; subject: string; message: string }): Observable<any> {
+  return this.http.post('http://localhost:3000/api/messages', payload);
+}
 }

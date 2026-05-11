@@ -1,0 +1,54 @@
+<div class="admin-page">
+  <div class="page-header">
+    <h2 class="page-title">Orders Management</h2>
+    <button class="btn-secondary" (click)="load()"><i class="fa-solid fa-rotate"></i> Refresh</button>
+  </div>
+
+  <div class="toast-msg" *ngIf="toast">{{ toast }}</div>
+
+
+  <div class="table-wrap" *ngIf="!loading">
+    <div *ngIf="orders.length === 0" class="empty">No orders yet.</div>
+    <table class="data-table" *ngIf="orders.length > 0">
+      <thead>
+        <tr>
+          <th>#</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th><th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let order of orders">
+          <tr class="order-row" (click)="toggleExpand(order.id)">
+            <td>#{{ order.id }}</td>
+            <td>
+              <div class="customer-name">{{ order.customer_name }}</div>
+              <div class="customer-email">{{ order.customer_email }}</div>
+            </td>
+            <td>₱{{ order.total_amount | number:'1.2-2' }}</td>
+            <td>
+              <span class="status-badge" [style.background]="getStatusColor(order.status) + '33'" [style.color]="getStatusColor(order.status)">
+                {{ order.status | titlecase }}
+              </span>
+            </td>
+            <td>{{ order.created_at | date:'MMM d, h:mm a' }}</td>
+            <td class="actions" (click)="$event.stopPropagation()">
+              <select [(ngModel)]="order.status" (change)="updateStatus(order, order.status)" class="status-select">
+                <option *ngFor="let s of statuses" [value]="s">{{ s | titlecase }}</option>
+              </select>
+            </td>
+          </tr>
+          <!-- Expanded items row -->
+          <tr *ngIf="expandedOrder === order.id" class="expand-row">
+            <td colspan="6">
+              <div class="order-items">
+                <strong>Items:</strong>
+                <span *ngFor="let i of order.items; let last = last">
+                  {{ i.quantity }}× {{ i.name }} (₱{{ i.price }}){{ last ? '' : ', ' }}
+                </span>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</div>

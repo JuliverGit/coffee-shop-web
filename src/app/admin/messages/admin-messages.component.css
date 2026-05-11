@@ -1,0 +1,149 @@
+.admin-page {
+  padding: 2rem;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #e8d5b7;
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 1px solid #8a8078;
+  color: #e8d5b7;
+  padding: 0.4rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  background: #2a2420;
+}
+
+.toast-msg {
+  background: #3b82f6;
+  color: white;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.table-wrap {
+  background: #1a1612;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #2a2420;
+}
+
+.empty {
+  padding: 2rem;
+  text-align: center;
+  color: #8a8078;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.data-table thead {
+  background: #2a2420;
+}
+
+.data-table th {
+  padding: 0.8rem 1rem;
+  text-align: left;
+  color: #8a8078;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
+
+.data-table td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid #2a2420;
+  color: #e8d5b7;
+  vertical-align: middle;
+}
+
+.data-table tbody tr:hover {
+  background: #1f1b17;
+}
+
+.data-table tbody tr.unread td {
+  font-weight: 600;
+  color: #fff;
+}
+
+.msg-body {
+  max-width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.status-badge {
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: #10b981;
+  color: white;
+}
+
+.status-badge.banned {
+  background: #f59e0b;
+  color: #1a1612;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-success {
+  background: #10b981;
+  color: white;
+  border: none;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  transition: background 0.2s;
+}
+
+.btn-success:hover {
+  background: #059669;
+}
+
+.btn-delete {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: background 0.2s;
+}
+
+.btn-delete:hover {
+  background: #dc2626;
+}

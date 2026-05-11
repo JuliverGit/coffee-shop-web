@@ -1,0 +1,97 @@
+<div class="admin-page">
+  <div class="page-header">
+    <h2 class="page-title">Menu Management</h2>
+    <button class="btn-primary" (click)="openAdd()"><i class="fa-solid fa-plus"></i> Add Item</button>
+  </div>
+
+  <div class="toast-msg" *ngIf="toast">{{ toast }}</div>
+
+  <!-- TABLE -->
+  <div class="table-wrap" *ngIf="!loading">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Image</th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Available</th><th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of items">
+          <td><img [src]="item.image" [alt]="item.name" class="thumb"></td>
+          <td>
+            <div class="item-name">{{ item.name }}</div>
+            <div class="item-desc">{{ item.description }}</div>
+          </td>
+          <td><span class="badge" [class.hot]="item.category==='hot'" [class.cold]="item.category==='cold'">{{ item.category }}</span></td>
+          <td>₱{{ item.price }}</td>
+          <td>{{ item.stock }}</td>
+          <td>
+            <span class="avail" [class.yes]="item.is_available" [class.no]="!item.is_available">
+              {{ item.is_available ? 'Yes' : 'No' }}
+            </span>
+          </td>
+          <td class="actions">
+            <button class="btn-edit" (click)="openEdit(item)"><i class="fa-solid fa-pen"></i></button>
+            <button class="btn-delete" (click)="delete(item.id)"><i class="fa-solid fa-trash"></i></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- FORM MODAL -->
+  <div class="modal-overlay" *ngIf="showForm" (click)="closeForm()">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+      <h3>{{ isEditing ? 'Edit Item' : 'Add New Item' }}</h3>
+
+      <label>Name</label>
+      <input [(ngModel)]="form.name" placeholder="Item name">
+
+      <label>Description</label>
+      <textarea [(ngModel)]="form.description" rows="2" placeholder="Short description"></textarea>
+
+      <div class="form-row">
+        <div>
+          <label>Price (₱)</label>
+          <input type="number" [(ngModel)]="form.price" min="0">
+        </div>
+        <div>
+          <label>Stock</label>
+          <input type="number" [(ngModel)]="form.stock" min="0">
+        </div>
+        <div>
+          <label>Category</label>
+          <select [(ngModel)]="form.category">
+            <option value="hot">Hot</option>
+            <option value="cold">Cold</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- ✅ File Upload -->
+      <label>Image</label>
+      <div class="image-upload-wrap">
+        <input type="file" accept="image/*" (change)="onFileChange($event)" #fileInput style="display:none">
+        <button class="btn-upload" type="button" (click)="fileInput.click()">
+          <i class="fa-solid fa-upload"></i> Choose Image
+        </button>
+        <span class="file-name">{{ selectedFile ? selectedFile.name : 'No file chosen' }}</span>
+      </div>
+
+      <!-- ✅ Preview -->
+      <div class="image-preview" *ngIf="previewUrl">
+        <img [src]="previewUrl" alt="Preview">
+      </div>
+
+      <label class="checkbox-label">
+        <input type="checkbox" [(ngModel)]="form.is_available"> Available
+      </label>
+
+      <div class="form-actions">
+        <button class="btn-secondary" (click)="closeForm()">Cancel</button>
+        <button class="btn-primary" (click)="save()" [disabled]="saving">
+          {{ saving ? 'Saving...' : 'Save' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

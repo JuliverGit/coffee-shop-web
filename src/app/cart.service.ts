@@ -21,12 +21,19 @@ export interface OrderResponse {
   estimatedTime: number;
 }
 
+export interface UserOrder {
+  id: number;
+  total_amount: number;
+  status: string;
+  created_at: string;
+  items: { name: string; quantity: number; price: number }[];
+}
+
 @Injectable({ providedIn: 'root' })
 export class CartService {
 
   private apiUrl = 'http://localhost:3000/api/orders';
 
-  // ── Reactive state ──
   private _items = signal<CartItem[]>([]);
 
   readonly items   = this._items.asReadonly();
@@ -36,23 +43,18 @@ export class CartService {
 
   constructor(private http: HttpClient) {}
 
-  // ── Cart Operations ──
   addItem(item: Omit<CartItem, 'quantity'>) {
     const current = this._items();
     const existing = current.find(i => i.id === item.id);
     if (existing) {
-      this._items.set(
-        current.map(i => i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i)
-      );
+      this._items.set(current.map(i => i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i));
     } else {
       this._items.set([...current, { ...item, quantity: 1 }]);
     }
   }
 
   increaseQty(id: number) {
-    this._items.set(
-      this._items().map(i => i.id === id ? { ...i, quantity: i.quantity + 1 } : i)
-    );
+    this._items.set(this._items().map(i => i.id === id ? { ...i, quantity: i.quantity + 1 } : i));
   }
 
   decreaseQty(id: number) {
@@ -61,9 +63,7 @@ export class CartService {
     if (item.quantity <= 1) {
       this.removeItem(id);
     } else {
-      this._items.set(
-        this._items().map(i => i.id === id ? { ...i, quantity: i.quantity - 1 } : i)
-      );
+      this._items.set(this._items().map(i => i.id === id ? { ...i, quantity: i.quantity - 1 } : i));
     }
   }
 
@@ -75,7 +75,7 @@ export class CartService {
     this._items.set([]);
   }
 
-  // ── Place Order (connected sa backend!) ──
+  // ── Place Order ──
   placeOrder(token: string): Observable<OrderResponse> {
     const payload: OrderPayload = {
       items: this._items().map(i => ({
@@ -85,8 +85,14 @@ export class CartService {
       })),
       totalAmount: this.total()
     };
-
     return this.http.post<OrderResponse>(this.apiUrl, payload, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+  }
+
+  // ✅ Get user orders (for order status drawer)
+  getOrders(token: string): Observable<UserOrder[]> {
+    return this.http.get<UserOrder[]>(this.apiUrl, {
       headers: { Authorization: `Bearer ${token}` }
     });
   }

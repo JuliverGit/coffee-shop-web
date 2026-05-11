@@ -1,0 +1,42 @@
+<div class="admin-page">
+  <div class="page-header">
+    <h2 class="page-title">Messages</h2>
+    <button class="btn-secondary" (click)="load()"><i class="fa-solid fa-rotate"></i> Refresh</button>
+  </div>
+
+  <div class="toast-msg" *ngIf="toast">{{ toast }}</div>
+
+  <div class="table-wrap">
+    <div *ngIf="messages.length === 0 && !loading" class="empty">No messages found.</div>
+    <table class="data-table" *ngIf="messages.length > 0">
+      <thead>
+        <tr>
+          <th>#</th><th>Name</th><th>Email</th><th>Subject</th><th>Message</th><th>Date</th><th>Status</th><th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let msg of messages" [class.unread]="!msg.is_read">
+          <td>{{ msg.id }}</td>
+          <td>{{ msg.name }}</td>
+          <td>{{ msg.email }}</td>
+          <td>{{ msg.subject || '—' }}</td>
+          <td class="msg-body">{{ msg.message }}</td>
+          <td>{{ msg.created_at | date:'MMM d, y h:mm a' }}</td>
+          <td>
+            <span class="status-badge" [class.banned]="!msg.is_read">
+              {{ msg.is_read ? 'Read' : 'Unread' }}
+            </span>
+          </td>
+          <td class="actions">
+            <button class="btn-success" *ngIf="!msg.is_read" (click)="markAsRead(msg)">
+              <i class="fa-solid fa-check"></i> Read
+            </button>
+            <button class="btn-delete" (click)="delete(msg)">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

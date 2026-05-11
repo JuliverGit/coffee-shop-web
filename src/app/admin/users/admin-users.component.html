@@ -1,0 +1,48 @@
+<div class="admin-page">
+  <div class="page-header">
+    <h2 class="page-title">User Management</h2>
+    <button class="btn-secondary" (click)="load()"><i class="fa-solid fa-rotate"></i> Refresh</button>
+  </div>
+
+  <div class="toast-msg" *ngIf="toast">{{ toast }}</div>
+
+  <div class="table-wrap" *ngIf="!loading">
+    <div *ngIf="users.length === 0" class="empty">No users found.</div>
+    <table class="data-table" *ngIf="users.length > 0">
+      <thead>
+        <tr>
+          <th>#</th><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Joined</th><th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.id }}</td>
+          <td>{{ user.name }}</td>
+          <td class="email">{{ user.email }}</td>
+          <td>
+            <span class="role-badge" [class.admin]="user.role === 'admin'">{{ user.role }}</span>
+          </td>
+          <td>
+            <span class="status-badge" [class.banned]="user.is_banned">
+              {{ user.is_banned ? 'Banned' : 'Active' }}
+            </span>
+          </td>
+          <td>{{ user.created_at | date:'MMM d, y' }}</td>
+          <td class="actions">
+            <button
+              [class.btn-warn]="!user.is_banned"
+              [class.btn-success]="user.is_banned"
+              (click)="toggleBan(user)"
+              *ngIf="user.role !== 'admin'">
+              <i class="fa-solid" [class.fa-ban]="!user.is_banned" [class.fa-circle-check]="user.is_banned"></i>
+              {{ user.is_banned ? 'Unban' : 'Ban' }}
+            </button>
+            <button class="btn-delete" (click)="delete(user)" *ngIf="user.role !== 'admin'">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

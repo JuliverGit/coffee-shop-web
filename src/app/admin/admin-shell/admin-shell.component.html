@@ -1,0 +1,44 @@
+<div class="admin-layout" [class.sidebar-collapsed]="!isSidebarOpen">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <img src="assets/images/logo3.png" alt="Remo's" class="sidebar-logo">
+      <span class="sidebar-title">Admin Panel</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a *ngFor="let item of navItems"
+         [routerLink]="item.path"
+         routerLinkActive="active"
+         class="nav-item">
+        <i class="fa-solid {{ item.icon }}"></i>
+        <span>{{ item.label }}</span>
+      </a>
+    </nav>
+
+    <button class="sidebar-logout" (click)="logout()">
+      <i class="fa-solid fa-right-from-bracket"></i>
+      <span>Logout</span>
+    </button>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <button class="toggle-btn" (click)="toggleSidebar()" aria-label="Toggle sidebar">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <h1 class="topbar-title">Remo's Coffee — Admin</h1>
+      <div class="topbar-right">
+        <i class="fa-solid fa-user-shield"></i>
+        <span>Admin</span>
+      </div>
+    </header>
+
+    <main class="admin-content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+
+</div>
